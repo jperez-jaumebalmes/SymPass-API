@@ -7,6 +7,7 @@ import net.jaumebalmes.dam.m13.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,7 +18,7 @@ public class PasswordController {
     UserRepository userRepository;
 
     @PostMapping("/password/{userid}")
-    public String newEvent(@RequestBody Password newPassword,@PathVariable("userid") long userid) {
+    public String newPassword(@RequestBody Password newPassword,@PathVariable("userid") long userid) {
         Optional<User> userOptional = userRepository.findById(userid);
         User user = null;
         if(userOptional.isPresent()){
@@ -28,6 +29,18 @@ public class PasswordController {
         newPassword.setUser(user);
         passwordRepository.save(newPassword);
         return "Password creada amb id "+newPassword.getId();
+    }
+
+    @GetMapping("/password/{userid}")
+    public List<Password> getPasswordByUser(@PathVariable("userid") long userid) {
+        Optional<User> userOptional = userRepository.findById(userid);
+        User user = null;
+        if(userOptional.isPresent()){
+            user = userOptional.get();
+        }else{
+            return null;
+        }
+        return passwordRepository.findAllByUser(user);
     }
 
     @GetMapping("/password")
