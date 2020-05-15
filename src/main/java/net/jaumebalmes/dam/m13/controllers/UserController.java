@@ -14,7 +14,7 @@ public class UserController {
     UserRepository userRepository;
 
     @PostMapping("/user")
-    public String newEvent(@RequestBody User newUser) {
+    public String newUser(@RequestBody User newUser) {
         userRepository.save(newUser);
         return "User creat amb id "+newUser.getId();
     }

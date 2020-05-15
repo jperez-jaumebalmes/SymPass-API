@@ -32,7 +32,7 @@ public class PasswordController {
     }
 
     @GetMapping("/password/{userid}")
-    public List<Password> getPasswordByUser(@PathVariable("userid") long userid) {
+    public List<Password> getPasswordListByUser(@PathVariable("userid") long userid) {
         Optional<User> userOptional = userRepository.findById(userid);
         User user = null;
         if(userOptional.isPresent()){
@@ -43,10 +43,10 @@ public class PasswordController {
         return passwordRepository.findAllByUser(user);
     }
 
-    @GetMapping("/password")
-    public Iterable<Password> getPasswordList(){
-        return passwordRepository.findAll();
-    }
+    //@GetMapping("/password")
+    //public Iterable<Password> getPasswordList(){
+    //    return passwordRepository.findAll();
+    //}
 
 
 }
