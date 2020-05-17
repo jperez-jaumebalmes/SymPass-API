@@ -28,15 +28,15 @@ public class UserController {
         Optional<User> optUser = userRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
         if(optUser.isPresent()){
              responseHeaders.set("Allow-SymPass-Access","2");
-            return ResponseEntity.ok().headers(responseHeaders).body(2);
+            return ResponseEntity.status(200).body(2);
         }
         optUser = userRepository.findByEmail(loginForm.getEmail());
         if(optUser.isPresent()){
             responseHeaders.set("Allow-SymPass-Access","1");
-            return ResponseEntity.ok().headers(responseHeaders).body(1);
+            return ResponseEntity.status(406).body(1);
         }else{
             responseHeaders.set("Allow-SymPass-Access","0");
-            return ResponseEntity.ok().headers(responseHeaders).body(0);
+            return ResponseEntity.status(401).body(0);
         }
 
     }
