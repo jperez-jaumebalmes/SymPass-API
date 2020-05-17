@@ -27,8 +27,12 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         Optional<User> optUser = userRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
         if(optUser.isPresent()){
-             responseHeaders.set("Allow-SymPass-Access","2");
-            return ResponseEntity.status(200).body(2);
+            User user = optUser.get();
+            long id = user.getId();
+            int status = 200;
+            String statusTotal = ""+status+id;
+            responseHeaders.set("Allow-SymPass-Access","2");
+            return ResponseEntity.status(Integer.parseInt(statusTotal)).body(2);
         }
         optUser = userRepository.findByEmail(loginForm.getEmail());
         if(optUser.isPresent()){
