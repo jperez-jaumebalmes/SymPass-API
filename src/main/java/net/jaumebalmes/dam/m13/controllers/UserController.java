@@ -4,6 +4,8 @@ import net.jaumebalmes.dam.m13.dao.UserRepository;
 import net.jaumebalmes.dam.m13.entities.LoginForm;
 import net.jaumebalmes.dam.m13.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,17 +23,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public int logInUser(@RequestBody LoginForm loginForm){
+    public ResponseEntity<Integer> logInUser(@RequestBody LoginForm loginForm){
+        HttpHeaders responseHeaders = new HttpHeaders();
         Optional<User> optUser = userRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
         if(optUser.isPresent()){
-            return 2;
+             responseHeaders.set("Allow-SymPass-Access","2");
+            return ResponseEntity.ok().headers(responseHeaders).body(2);
         }
         optUser = userRepository.findByEmail(loginForm.getEmail());
         if(optUser.isPresent()){
-            return 1;
+            responseHeaders.set("Allow-SymPass-Access","1");
+            return ResponseEntity.ok().headers(responseHeaders).body(1);
         }else{
-            return 0;
+            responseHeaders.set("Allow-SymPass-Access","0");
+            return ResponseEntity.ok().headers(responseHeaders).body(0);
         }
+
     }
 
     @GetMapping("/user")
