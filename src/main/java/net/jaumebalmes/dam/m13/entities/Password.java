@@ -8,17 +8,21 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Entity
+@Table(name = "sympass_password")
 public class Password {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
     private String username;
+    @Column(name = "account_password")
     private String password;
+    @Column(name = "password_description")
     private String description;
     private String link;
+    @Column(name = "password_type")
     private int type;
-    @Column(name="last_modification",columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name="last_modification",columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     private OffsetDateTime lastModification;
     private String icon;
 //    @Column(name = "folder_id")
