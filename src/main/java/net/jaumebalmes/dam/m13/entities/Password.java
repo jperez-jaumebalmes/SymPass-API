@@ -18,7 +18,7 @@ public class Password {
     private String description;
     private String link;
     private int type;
-    @Column(name="last_modification",columnDefinition = "TIMESTAMP WITH TIME ZONE default CURRENT_TIMESTAMP")
+    @Column(name="last_modification",columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime lastModification;
     private String icon;
 //    @Column(name = "folder_id")

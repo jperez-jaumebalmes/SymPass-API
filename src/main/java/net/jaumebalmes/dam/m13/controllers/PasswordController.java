@@ -7,6 +7,7 @@ import net.jaumebalmes.dam.m13.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ public class PasswordController {
             return "User not found";
         }
         newPassword.setUser(user);
+        newPassword.setLastModification(OffsetDateTime.now());
         passwordRepository.save(newPassword);
         return "Password creada amb id "+newPassword.getId();
     }
