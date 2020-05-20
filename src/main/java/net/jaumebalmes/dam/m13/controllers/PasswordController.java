@@ -5,8 +5,10 @@ import net.jaumebalmes.dam.m13.dao.UserRepository;
 import net.jaumebalmes.dam.m13.entities.Password;
 import net.jaumebalmes.dam.m13.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -46,10 +48,47 @@ public class PasswordController {
         return passwordRepository.findAllByUser(user);
     }
 
-    //@GetMapping("/password")
-    //public Iterable<Password> getPasswordList(){
-    //    return passwordRepository.findAll();
-    //}
+    @PutMapping("/password/{passId}")
+    public ResponseEntity<Integer> modifyPassword(@RequestBody Password modPassword, @PathVariable("passId") long passId){
+        Optional<Password> optPassword = passwordRepository.findById(passId);
+        Password oldPassword;
+        if(optPassword.isPresent()){
+            oldPassword = optPassword.get();
+        }else{
+            return ResponseEntity.status(404).body(0);
+        }
+
+        oldPassword = updateParams(oldPassword,modPassword);
+        passwordRepository.save(oldPassword);
+
+        return ResponseEntity.status(200).body(1);
+    }
+
+    private Password updateParams(Password oldPassword, Password modPassword) {
+        oldPassword.setDescription(modPassword.getDescription());
+        oldPassword.setIcon(modPassword.getDescription());
+        oldPassword.setUsername(modPassword.getUsername());
+        oldPassword.setLink(modPassword.getLink());
+        oldPassword.setPassword(modPassword.getPassword());
+        oldPassword.setTitle(modPassword.getTitle());
+        oldPassword.setType(modPassword.getType());
+
+        return oldPassword;
+    }
+
+    @DeleteMapping("/password/{passId}")
+    public ResponseEntity<Integer> deletePassword(@PathVariable("passId") long passId){
+        Optional<Password> optionalPassword = passwordRepository.findById(passId);
+        Password delPassword;
+        if(optionalPassword.isPresent()){
+            delPassword = optionalPassword.get();
+        }else{
+            return ResponseEntity.status(404).body(0);
+        }
+
+        passwordRepository.delete(delPassword);
+        return ResponseEntity.status(200).body(1);
+    }
 
 
 }
