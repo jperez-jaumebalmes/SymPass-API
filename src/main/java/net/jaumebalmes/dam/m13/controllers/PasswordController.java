@@ -29,7 +29,7 @@ public class PasswordController {
             return "User not found";
         }
         newPassword.setUser(user);
-        //newPassword.setLastModification(OffsetDateTime.now());
+        newPassword.setLastModification(OffsetDateTime.now());
         passwordRepository.save(newPassword);
         return "Password creada amb id "+newPassword.getId();
     }
