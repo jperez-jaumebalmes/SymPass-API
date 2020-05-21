@@ -17,9 +17,13 @@ public class UserController {
     UserRepository userRepository;
 
     @PostMapping("/user")
-    public String newUser(@RequestBody User newUser) {
+    public ResponseEntity<String> newUser(@RequestBody User newUser) {
+        Optional<User> optionalUser = userRepository.findByEmail(newUser.getEmail());
+        if(optionalUser.isPresent()){
+            return ResponseEntity.status(409).body("409");
+        }
         userRepository.save(newUser);
-        return "User creat amb id "+newUser.getId();
+        return ResponseEntity.status(200).body("User creat amb id "+newUser.getId());
     }
 
     @PostMapping("/login")
@@ -49,4 +53,14 @@ public class UserController {
     public Iterable<User> getUserList(){
         return userRepository.findAll();
     }
+
+    /*@PostMapping("/checkEmail")
+    public ResponseEntity<Integer> checkExistenceEmail(@RequestBody LoginForm loginForm){
+        Optional<User> optionalUser = userRepository.findByEmail(loginForm.getEmail());
+        if(optionalUser.isPresent()){
+            return ResponseEntity.status(409).body(409);
+        }else{
+            return ResponseEntity.status(200).body(200);
+        }
+    }*/
 }
