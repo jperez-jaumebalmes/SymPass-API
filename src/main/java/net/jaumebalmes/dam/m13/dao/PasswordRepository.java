@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PasswordRepository extends CrudRepository<Password, Long> {
     public List<Password> findAllByUser(User user);
     public Optional<Password> findById(Long id);
+    public List<Password> findAllByTitleAndUser(String title, User user);
+    public List<Password> findAllByTypeAndUser(Integer type, User user);
 }

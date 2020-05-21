@@ -90,5 +90,27 @@ public class PasswordController {
         return ResponseEntity.status(200).body(1);
     }
 
+    @GetMapping("/passwordFilterByTitle/{userId}")
+    public List<Password> getPasswordsByTitle(@RequestBody Password pass, @PathVariable("userId") Long userId){
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user;
+        if(optionalUser.isPresent()){
+            user = optionalUser.get();
+            return passwordRepository.findAllByTitleAndUser(pass.getTitle(),user);
+        }else{
+            return null;
+        }
+    }
 
+    @GetMapping("/passwordFilterByType/{userId}")
+    public List<Password> getPasswordsByType(@RequestBody Password pass, @PathVariable("userId") Long userId){
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user;
+        if(optionalUser.isPresent()){
+            user = optionalUser.get();
+            return passwordRepository.findAllByTypeAndUser(pass.getType(),user);
+        }else{
+            return null;
+        }
+    }
 }
