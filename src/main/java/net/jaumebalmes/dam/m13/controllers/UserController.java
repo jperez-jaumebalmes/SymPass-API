@@ -2,10 +2,13 @@ package net.jaumebalmes.dam.m13.controllers;
 
 import net.jaumebalmes.dam.m13.dao.UserRepository;
 import net.jaumebalmes.dam.m13.entities.LoginForm;
+import net.jaumebalmes.dam.m13.entities.Password;
 import net.jaumebalmes.dam.m13.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -14,7 +17,9 @@ import java.util.Optional;
 @RestController
 public class UserController {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private JavaMailSender mailSender;
 
     @PostMapping("/user")
     public ResponseEntity<String> newUser(@RequestBody User newUser) {
@@ -45,6 +50,24 @@ public class UserController {
         }else{
             responseHeaders.set("Allow-SymPass-Access","0");
             return ResponseEntity.status(401).body(0);
+        }
+
+    }
+
+    @GetMapping("/recover")
+    public ResponseEntity<String> recoverPass(@RequestBody User user){
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+        SimpleMailMessage email = new SimpleMailMessage();
+        if(optionalUser.isPresent()){
+            user = optionalUser.get();
+            email.setTo(user.getEmail());
+            email.setSubject("Email Recovery from user "+user.getName());
+            email.setText("The password of your SymPass's account: "+user.getPassword());
+
+            mailSender.send(email);
+            return ResponseEntity.status(200).body("Existe el email");
+        }else{
+            return ResponseEntity.status(404).body("No existe el email");
         }
 
     }
