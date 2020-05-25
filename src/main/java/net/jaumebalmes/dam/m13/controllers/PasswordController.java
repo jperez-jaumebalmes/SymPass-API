@@ -66,7 +66,7 @@ public class PasswordController {
 
     private Password updateParams(Password oldPassword, Password modPassword) {
         oldPassword.setDescription(modPassword.getDescription());
-        oldPassword.setIcon(modPassword.getDescription());
+        oldPassword.setIcon(modPassword.getIcon());
         oldPassword.setUsername(modPassword.getUsername());
         oldPassword.setLink(modPassword.getLink());
         oldPassword.setPassword(modPassword.getPassword());

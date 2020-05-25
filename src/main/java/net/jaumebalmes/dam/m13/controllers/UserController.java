@@ -54,7 +54,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/recover")
+    @PostMapping("/recover")
     public ResponseEntity<String> recoverPass(@RequestBody User user){
         Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
         SimpleMailMessage email = new SimpleMailMessage();
