@@ -58,8 +58,6 @@ public class UserController {
             responseHeaders.set("Allow-SymPass-Access","0");
             return ResponseEntity.status(401).body(0);
         }
-<<<<<<< HEAD
-
     }
 
     @PostMapping("/recover")
@@ -80,10 +78,4 @@ public class UserController {
 
     }
 
-    @GetMapping("/user")
-    public Iterable<User> getUserList(){
-        return userRepository.findAll();
-=======
->>>>>>> 61617f1070c7fc650a026131fb1ea75144671993
-    }
 }
