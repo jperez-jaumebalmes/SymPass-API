@@ -4,6 +4,7 @@ import net.jaumebalmes.dam.m13.dao.PasswordRepository;
 import net.jaumebalmes.dam.m13.dao.UserRepository;
 import net.jaumebalmes.dam.m13.entities.Password;
 import net.jaumebalmes.dam.m13.entities.User;
+import net.jaumebalmes.dam.m13.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,14 @@ public class PasswordController {
     public String newPassword(@RequestBody Password newPassword,@PathVariable("userid") long userid) {
         Optional<User> userOptional = userRepository.findById(userid);
         User user = null;
+        String securePassword = PasswordUtils.encodeBase64Pass(newPassword.getPassword());
         if(userOptional.isPresent()){
             user = userOptional.get();
         }else{
             return "User not found";
         }
         newPassword.setUser(user);
+        newPassword.setPassword(securePassword);
         newPassword.setLastModification(OffsetDateTime.now());
         passwordRepository.save(newPassword);
         return "Password creada amb id "+newPassword.getId();
@@ -45,7 +48,13 @@ public class PasswordController {
         }else{
             return null;
         }
-        return passwordRepository.findAllByUser(user);
+        List<Password> allPasswords = passwordRepository.findAllByUser(user);
+
+        for(Password p : allPasswords){
+            p.setPassword(PasswordUtils.decodeBase64Pass(p.getPassword()));
+        }
+
+        return allPasswords;
     }
 
     @PutMapping("/password/{passId}")
