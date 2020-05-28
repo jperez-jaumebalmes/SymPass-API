@@ -10,7 +10,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordUtils {
-
+/*
     private static final Random RANDOM = new SecureRandom();
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final int ITERATIONS = 10000;
@@ -44,8 +44,8 @@ public class PasswordUtils {
         return returnValue;
     }
 
-    public static boolean verifyUserPassword(String providedPassword,
-                                             String securedPassword, String salt)
+        public static boolean verifyUserPassword(String providedPassword,
+            String securedPassword, String salt)
     {
         boolean returnValue = false;
 
@@ -54,6 +54,23 @@ public class PasswordUtils {
 
         // Check if two passwords are equal
         returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
+
+        return returnValue;
+    }
+
+    */
+
+    public static boolean verifyUserPassword(String providedPassword,
+                                             String securedPassword)
+    {
+        boolean returnValue = false;
+
+        // Generate New secure password with the same salt
+        //String newSecurePassword = generateSecurePassword(providedPassword, salt);
+
+        String encodedProvidedPassword = encodeBase64Pass(providedPassword);
+        // Check if two passwords are equal
+        returnValue = encodedProvidedPassword.equalsIgnoreCase(securedPassword);
 
         return returnValue;
     }

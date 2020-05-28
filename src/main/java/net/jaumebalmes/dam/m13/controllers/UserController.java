@@ -12,6 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -22,16 +23,17 @@ public class UserController {
     @Autowired
     private JavaMailSender mailSender;
 
+    @GetMapping("/user")
+    public List<User> getUsers(){return (List<User>) userRepository.findAll();}
+
     @PostMapping("/user")
     public ResponseEntity<String> newUser(@RequestBody User newUser) {
         Optional<User> optionalUser = userRepository.findByEmail(newUser.getEmail());
         if(optionalUser.isPresent()){
             return ResponseEntity.status(409).body("409");
         }
-        String salt = PasswordUtils.getSalt(30);
-        String securePassword = PasswordUtils.generateSecurePassword(newUser.getPassword(),salt);
-        newUser.setPassword(securePassword);
-        newUser.setSalt(salt);
+        String encodedPassword = PasswordUtils.encodeBase64Pass(newUser.getPassword());
+        newUser.setPassword(encodedPassword);
         userRepository.save(newUser);
         return ResponseEntity.status(200).body("User creat amb id "+newUser.getId());
     }
@@ -43,7 +45,7 @@ public class UserController {
         Optional<User> optUser = userRepository.findByEmail(loginForm.getEmail());
         if(optUser.isPresent()){
             User user = optUser.get();
-            boolean passwordMatch = PasswordUtils.verifyUserPassword(loginForm.getPassword(),user.getPassword(),user.getSalt());
+            boolean passwordMatch = PasswordUtils.verifyUserPassword(loginForm.getPassword(),user.getPassword());
             if(passwordMatch){
                 long id = user.getId();
                 int status = 200;
@@ -68,7 +70,7 @@ public class UserController {
             user = optionalUser.get();
             email.setTo(user.getEmail());
             email.setSubject("Email Recovery from user "+user.getName());
-            email.setText("The password of your SymPass's account: "+user.getPassword());
+            email.setText("The password of your SymPass's account: "+PasswordUtils.decodeBase64Pass(user.getPassword()));
 
             mailSender.send(email);
             return ResponseEntity.status(200).body("Existe el email");

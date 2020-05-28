@@ -78,7 +78,7 @@ public class PasswordController {
         oldPassword.setIcon(modPassword.getIcon());
         oldPassword.setUsername(modPassword.getUsername());
         oldPassword.setLink(modPassword.getLink());
-        oldPassword.setPassword(modPassword.getPassword());
+        oldPassword.setPassword(PasswordUtils.encodeBase64Pass(modPassword.getPassword()));
         oldPassword.setTitle(modPassword.getTitle());
         oldPassword.setType(modPassword.getType());
 

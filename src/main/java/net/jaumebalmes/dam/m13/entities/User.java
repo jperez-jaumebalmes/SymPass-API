@@ -13,7 +13,6 @@ public class User {
     private String password;
     private String email;
     private String telephone;
-    private String salt;
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Password> passwords = new ArrayList<Password>();
 
@@ -64,11 +63,4 @@ public class User {
         this.passwords = passwords;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 }
